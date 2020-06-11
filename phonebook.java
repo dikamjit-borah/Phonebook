@@ -7,6 +7,13 @@ class Contacts{
     String email_id;
     String name;
 
+    Contacts()
+    {
+        this.id = 0;
+        this.mobile_number = 0;
+        this.email_id ="";
+        this.name = "";
+    }
 
     Contacts (Contacts contact)
     {
@@ -182,6 +189,10 @@ class ContactServiceImpl extends ContactService implements ContactServices
                 }
             }
         }
+        else
+        {
+            System.out.println("CopyAll: Invalid choice");
+        }
     }
     
     public void Copy(Contacts contact, String memory)
@@ -194,6 +205,10 @@ class ContactServiceImpl extends ContactService implements ContactServices
         {
             PHONE[j] = contact;
             j++;
+        }
+        else
+        {
+            System.out.println("Copy: Invalid choice");
         }
     }
 }
@@ -216,7 +231,8 @@ class InvalidEmailException extends Exception
 
 public class Main
 {
-            public static int id_X = 1;
+    public static int id_X = 1;
+    public static Contacts gen = new Contacts();
 	public static void main(String[] args) 
 	{
         System.out.println("Hello World");
@@ -269,16 +285,32 @@ public class Main
                     System.out.println("\nStorage(SIM/PHONE)        :    ");  String memory_input = s.nextLine();
                     
                     Contacts c = new Contacts(name_input, id_X, mobile_input, email_input); //etu contact copy koribo lagibo case 2 t
+                    gen = c;
+                    System.out.println(gen.name + "");
                     cc.insertContact(c, memory_input); //ContactServiceImpl object to insert contact object in array contacts
                     id_X++;
                     break;
                 case 5: 
-                    Contacts copy_const = new Contacts(c);
-                    System.out.println("\nCopy contact to (SIM/PHONE)        :    ");   memory_input = s.nextLine();
-                    cc.Copy(c, memory_input);
+                    System.out.println(gen.email_id + "");
+                    //Contacts copy_const = new Contacts(c);
+                    System.out.println("\nCopy contact to (SIM/PHONE)(1/2)        :    "); 
+                    int ch5 = s.nextInt();
+                    //String memory_input_5 = s.nextLine(); s.nextLine();
+                    //System.out.println(memory_input_5 + "yoyo"); //doesnt print memory_input_5 stirng
+                    if (ch5 == 1)
+                        cc.Copy(gen, "SIM");
+                    else
+                        cc.Copy(gen, "PHONE");
+                    break;
                 case 6: 
-                    System.out.println("\nCopy all contacts from (SIM/PHONE)        :    ");   memory_input = s.nextLine();
-                    cc.CopyAll(memory_input);
+                    System.out.println("\nCopy all contacts from (SIM/PHONE)        :    "); 
+                    //String memory_input_6 = s.nextLine(); s.nextLine(); //STRING LOLE DISPLAY SIM BA PONE NAJAI RETURN JAI
+                    int ch6 = s.nextInt();
+                    if (ch6 == 1)
+                        cc.CopyAll("SIM");
+                    else
+                        cc.CopyAll("PHONE");
+                    break;
                     
                 case 4: cc.displayContacts();
                     break;
