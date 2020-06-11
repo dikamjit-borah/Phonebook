@@ -8,6 +8,14 @@ class Contacts{
     String name;
 
 
+    Contacts (Contacts contact)
+    {
+        id = contact.id;
+        name = contact.name;
+        mobile_number = contact.mobile_number;
+        email_id = contact.email_id;
+    }
+
     Contacts(String name, long id, long mobile_number, String email_id)
     {
         this.name = name;
@@ -250,6 +258,7 @@ public class Main
         Scanner s = new Scanner(System.in);
         System.out.println("Enter your choice   :   ");
         int choice = s.nextInt();
+        
         do{
             switch(choice)
             {
@@ -264,8 +273,9 @@ public class Main
                     id_X++;
                     break;
                 case 5: 
+                    Contacts copy_const = new Contacts(c);
                     System.out.println("\nCopy contact to (SIM/PHONE)        :    ");   memory_input = s.nextLine();
-                    //cc.Copy(c, memory_input);
+                    cc.Copy(c, memory_input);
                 case 6: 
                     System.out.println("\nCopy all contacts from (SIM/PHONE)        :    ");   memory_input = s.nextLine();
                     cc.CopyAll(memory_input);
