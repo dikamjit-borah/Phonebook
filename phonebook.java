@@ -90,7 +90,7 @@ class ContactService
 interface ContactServices
 {
     public void insertContact(Contacts contact, String memory);
-    public void updateContact(Contacts contact, String memory);
+    public void updateContact();
     //public Contacts searchContact(long mobileNumber, String memory);
 }
 
@@ -111,15 +111,31 @@ class ContactServiceImpl extends ContactService implements ContactServices
             j++;
         }
     }
-    public void updateContact(Contacts contact, String memory)
+    public void updateContact()
     {
+        Scanner sss = new Scanner(System.in);
+        
+        System.out.println("Enter contact to update     :   ");  String ele = sss.nextLine();
+        
+        int position = searchContact(ele.toLowerCase());
+        if(position!= 20)
+        {
+            System.out.println("\nUpdate Mobile number             :    "); long mobile_input = sss.nextLong();sss.nextLine();
+            System.out.println("\nUpdate Name of contact           :    "); String name_input = sss.nextLine();
+            System.out.println("\nUpdate Email id                  :    ");  String email_input = sss.nextLine();
 
+            
+            SIM[position].name = name_input;
+            SIM[position].mobile_number = mobile_input;
+            SIM[position].email_id = email_input;
+            
+            System.out.println("Contact updated!");
+            System.out.println("\n" + SIM[position]);
+           
+            
+        }
     }
-   // public Contacts searchContact(long mobileNumber, String memory)
-    {
-       
-    }
-    
+   
     public void displayContacts()
     {
         System.out.println("\nCONTACTS IN SIM: ");
@@ -152,6 +168,63 @@ class ContactServiceImpl extends ContactService implements ContactServices
                 }
             }
         }
+    }
+    
+    
+    
+    public int searchContact(String ele)
+    {
+        int pos = 20;
+        int flag = 0;
+        for(int i = 0; i<SIM.length; i++)
+       {
+           if(SIM[i]!=null)
+           {
+               if(SIM[i].name.toLowerCase().equals(ele))
+                {
+                    System.out.println("\nContact found at " + i + " in SIM memory");
+                    System.out.println("\n"+ SIM[i]);
+                    flag = 1;
+                    pos = i;
+                    break;
+                }
+           }
+           else
+           {
+               break;
+           }
+           
+       }
+      
+       for(int i = 0; i<SIM.length; i++)
+       {
+           if(PHONE[i]!=null)
+           {
+               if(PHONE[i].name.toLowerCase().equals(ele))
+                {
+                    System.out.println("\nContact found at " + i + " in PHONE memory");
+                    System.out.println("\n"+ PHONE[i]);
+                    flag = 1;
+                    pos = j;
+                     break;
+                }
+           }
+           else
+           {
+               break;
+           }
+        
+       }
+       
+       if(flag == 0)
+       {
+           
+               System.out.println("\nContact cannot be found");
+              
+       }
+       
+       return pos;
+       
     }
     
     public void CopyAll(String memory)
@@ -314,6 +387,16 @@ public class Main
                     
                 case 4: cc.displayContacts();
                     break;
+                case 3: 
+                    Scanner ss = new Scanner(System.in);
+                    
+                    System.out.println("Contact name to search      :   "); String ele = ss.nextLine();
+                    System.out.println(""+ ele);
+                    int pos = cc.searchContact(ele.toLowerCase());
+                    break;
+                case 2: 
+                    cc.updateContact();
+                
             }
             System.out.println("Enter your choice(Press 0 to exit)  :   ");
             choice = s.nextInt();
