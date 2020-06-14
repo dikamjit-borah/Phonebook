@@ -1,8 +1,9 @@
 import java.util.*;
-
+import javafx.util.Pair; 
 
 class Contacts{
 
+   
     long id, mobile_number;
     String email_id;
     String name;
@@ -25,10 +26,11 @@ class Contacts{
 
     Contacts(String name, long id, long mobile_number, String email_id)
     {
+        
         this.name = name;
         this.id = id;
-        this.mobile_number = mobile_number;
-        this.email_id = email_id;
+       this.mobile_number = mobile_number;
+       this.email_id = email_id;
     } //parametrised constructure
 
     public String toString()
@@ -110,6 +112,9 @@ class ContactServiceImpl extends ContactService implements ContactServices
             PHONE[j] = contact;
             j++;
         }
+        else{
+            System.out.println("\nInvalid choice: Enter SIM or PHONE!");
+        }
     }
     public void updateContact()
     {
@@ -117,20 +122,34 @@ class ContactServiceImpl extends ContactService implements ContactServices
         
         System.out.println("Enter contact to update     :   ");  String ele = sss.nextLine();
         
-        int position = searchContact(ele.toLowerCase());
-        if(position!= 20)
+        Pair<Integer, String> position = searchContact(ele.toLowerCase());
+        if(position.getKey()!= 20)
         {
             System.out.println("\nUpdate Mobile number             :    "); long mobile_input = sss.nextLong();sss.nextLine();
             System.out.println("\nUpdate Name of contact           :    "); String name_input = sss.nextLine();
             System.out.println("\nUpdate Email id                  :    ");  String email_input = sss.nextLine();
 
+            //System.out.println("" + mobile_input + name_input + email_input); 
             
-            SIM[position].name = name_input;
-            SIM[position].mobile_number = mobile_input;
-            SIM[position].email_id = email_input;
+        
+            if(position.getValue().equals("SIM"))
+            {
+                SIM[position.getKey()].name = name_input;
+                SIM[position.getKey()].mobile_number = mobile_input;
+                SIM[position.getKey()].email_id = email_input;
             
-            System.out.println("Contact updated!");
-            System.out.println("\n" + SIM[position]);
+                System.out.println("Contact updated!");
+                System.out.println("\n" + SIM[position.getKey()]);
+            }
+           else if(position.getValue().equals("PHONE"))
+            {
+                PHONE[position.getKey()].name = name_input;
+                PHONE[position.getKey()].mobile_number = mobile_input;
+                PHONE[position.getKey()].email_id = email_input;
+            
+                System.out.println("Contact updated!");
+                System.out.println("\n" + PHONE[position.getKey()]);
+            }
            
             
         }
@@ -141,13 +160,15 @@ class ContactServiceImpl extends ContactService implements ContactServices
         System.out.println("\nCONTACTS IN SIM: ");
         for(int k = 0; k<SIM.length; k++)
         {
-            System.out.println("\n" + SIM[k]);
+            if(SIM[k]!=null)
+                System.out.println("\n" + SIM[k]);
         }
 
         System.out.println("\n\nCONTACTS IN PHONE: ");        
         for(int k = 0; k<PHONE.length; k++)
         {
-            System.out.println("\n" + PHONE[k]);
+            if(PHONE[k]!=null)
+                System.out.println("\n" + PHONE[k]);
         }
     }
     
@@ -172,7 +193,7 @@ class ContactServiceImpl extends ContactService implements ContactServices
     
     
     
-    public int searchContact(String ele)
+    public Pair<Integer, String> searchContact(String ele)
     {
         int pos = 20;
         int flag = 0;
@@ -186,12 +207,8 @@ class ContactServiceImpl extends ContactService implements ContactServices
                     System.out.println("\n"+ SIM[i]);
                     flag = 1;
                     pos = i;
-                    break;
+                    return new Pair<Integer, String> (pos, "SIM");
                 }
-           }
-           else
-           {
-               break;
            }
            
        }
@@ -206,14 +223,10 @@ class ContactServiceImpl extends ContactService implements ContactServices
                     System.out.println("\n"+ PHONE[i]);
                     flag = 1;
                     pos = j;
-                     break;
+                    return new Pair<Integer, String> (pos, "PHONE");
                 }
            }
-           else
-           {
-               break;
-           }
-        
+           
        }
        
        if(flag == 0)
@@ -223,7 +236,7 @@ class ContactServiceImpl extends ContactService implements ContactServices
               
        }
        
-       return pos;
+       return new Pair<Integer, String> (pos, "NULL");
        
     }
     
@@ -352,21 +365,44 @@ public class Main
             switch(choice)
             {
                 case 1: 
+                    int flagg = 0;
                     System.out.println("\nMobile number             :    "); long mobile_input = s.nextLong();s.nextLine();
                     System.out.println("\nName of contact           :    "); String name_input = s.nextLine();
                     System.out.println("\nEmail id                  :    ");  String email_input = s.nextLine();
                     System.out.println("\nStorage(SIM/PHONE)        :    ");  String memory_input = s.nextLine();
                     
-                    Contacts c = new Contacts(name_input, id_X, mobile_input, email_input); //etu contact copy koribo lagibo case 2 t
-                    gen = c;
-                    System.out.println(gen.name + "");
-                    cc.insertContact(c, memory_input); //ContactServiceImpl object to insert contact object in array contacts
-                    id_X++;
+                    Contacts c = new Contacts(name_input, id_X, mobile_input, email_input); 
+                    
+                    try{
+                        c.id_setter(id_X);
+                        c.email_id_setter(email_input);
+                        c.mobile_number_setter(mobile_input);
+                    }
+                    catch(Exception e)
+                    {
+                        flagg = 1;
+                        System.out.println(e.getMessage());
+                    }
+                    if(flagg == 0)
+                    {
+                        if(memory_input.toUpperCase().equals("SIM") || memory_input.toUpperCase().equals("PHONE"))
+                        {   
+                            gen = c;
+                            cc.insertContact(c, memory_input.toUpperCase()); //ContactServiceImpl object to insert contact object in array contacts
+                            id_X++;
+                        }
+                        else
+                        {
+                            System.out.println("\nInvalid choice: Enter SIM or PHONE!");
+                        }
+                        
+                    }
+                   
                     break;
                 case 5: 
                     System.out.println(gen.email_id + "");
                     //Contacts copy_const = new Contacts(c);
-                    System.out.println("\nCopy contact to (SIM/PHONE)(1/2)        :    "); 
+                    System.out.println("\nCopy contact to (SIM/PHONE)(1/2)              :    "); 
                     int ch5 = s.nextInt();
                     //String memory_input_5 = s.nextLine(); s.nextLine();
                     //System.out.println(memory_input_5 + "yoyo"); //doesnt print memory_input_5 stirng
@@ -374,25 +410,30 @@ public class Main
                         cc.Copy(gen, "SIM");
                     else
                         cc.Copy(gen, "PHONE");
+                        
+                    System.out.println("\nCopied successfully!");
                     break;
                 case 6: 
-                    System.out.println("\nCopy all contacts from (SIM/PHONE)        :    "); 
-                    //String memory_input_6 = s.nextLine(); s.nextLine(); //STRING LOLE DISPLAY SIM BA PONE NAJAI RETURN JAI
+                    System.out.println("\nCopy all contacts from (SIM/PHONE)(1/2        :    "); 
+                    //String memory_input_6 = s.nextLine(); s.nextLine(); 
                     int ch6 = s.nextInt();
                     if (ch6 == 1)
                         cc.CopyAll("SIM");
                     else
                         cc.CopyAll("PHONE");
+                    System.out.println("\nCopied successfully!"); 
                     break;
                     
-                case 4: cc.displayContacts();
+                case 4: 
+                    cc.sortContacts();
+                    cc.displayContacts();
                     break;
                 case 3: 
                     Scanner ss = new Scanner(System.in);
                     
                     System.out.println("Contact name to search      :   "); String ele = ss.nextLine();
                     System.out.println(""+ ele);
-                    int pos = cc.searchContact(ele.toLowerCase());
+                    Pair<Integer, String> pos = cc.searchContact(ele.toLowerCase());
                     break;
                 case 2: 
                     cc.updateContact();
