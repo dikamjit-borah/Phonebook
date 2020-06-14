@@ -27,8 +27,14 @@ class Contacts{
     {
         this.name = name;
         this.id = id;
-        this.mobile_number = mobile_number;
-        this.email_id = email_id;
+        try 
+        
+        {mobile_number_setter(mobile_number);
+        email_id_setter(email_id);}
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
     } //parametrised constructure
 
     public String toString()
@@ -141,13 +147,15 @@ class ContactServiceImpl extends ContactService implements ContactServices
         System.out.println("\nCONTACTS IN SIM: ");
         for(int k = 0; k<SIM.length; k++)
         {
-            System.out.println("\n" + SIM[k]);
+            if(SIM[k]!=null)
+                System.out.println("\n" + SIM[k]);
         }
 
         System.out.println("\n\nCONTACTS IN PHONE: ");        
         for(int k = 0; k<PHONE.length; k++)
         {
-            System.out.println("\n" + PHONE[k]);
+            if(PHONE[k]!=null)
+                System.out.println("\n" + PHONE[k]);
         }
     }
     
@@ -359,14 +367,13 @@ public class Main
                     
                     Contacts c = new Contacts(name_input, id_X, mobile_input, email_input); //etu contact copy koribo lagibo case 2 t
                     gen = c;
-                    System.out.println(gen.name + "");
                     cc.insertContact(c, memory_input); //ContactServiceImpl object to insert contact object in array contacts
                     id_X++;
                     break;
                 case 5: 
                     System.out.println(gen.email_id + "");
                     //Contacts copy_const = new Contacts(c);
-                    System.out.println("\nCopy contact to (SIM/PHONE)(1/2)        :    "); 
+                    System.out.println("\nCopy contact to (SIM/PHONE)(1/2)              :    "); 
                     int ch5 = s.nextInt();
                     //String memory_input_5 = s.nextLine(); s.nextLine();
                     //System.out.println(memory_input_5 + "yoyo"); //doesnt print memory_input_5 stirng
@@ -374,18 +381,23 @@ public class Main
                         cc.Copy(gen, "SIM");
                     else
                         cc.Copy(gen, "PHONE");
+                        
+                    System.out.println("\nCopied successfully!");
                     break;
                 case 6: 
-                    System.out.println("\nCopy all contacts from (SIM/PHONE)        :    "); 
+                    System.out.println("\nCopy all contacts from (SIM/PHONE)(1/2        :    "); 
                     //String memory_input_6 = s.nextLine(); s.nextLine(); //STRING LOLE DISPLAY SIM BA PONE NAJAI RETURN JAI
                     int ch6 = s.nextInt();
                     if (ch6 == 1)
                         cc.CopyAll("SIM");
                     else
                         cc.CopyAll("PHONE");
+                    System.out.println("\nCopied successfully!"); 
                     break;
                     
-                case 4: cc.displayContacts();
+                case 4: 
+                    cc.sortContacts();
+                    cc.displayContacts();
                     break;
                 case 3: 
                     Scanner ss = new Scanner(System.in);
